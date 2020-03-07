@@ -1,0 +1,47 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="main.js"></script>
+<div id='app'>
+ <form id ='fmt' v-on:submit.prevent="save()"><!-- goi save 1 lan -->
+    <p>Code : <input  name="code" v-model ='student.code'></p>
+    <p>Name : <input  name="name" v-model ='student.name'></p>
+    <button type="submit">Save</button>
+</form>
+</div>
+<script>
+    new Vue({
+            el : "#app",
+            data : {id:null,student:{}},
+            created: async function(){
+                var url = location.href;
+                var pos = url.lastIndexOf('?id=');
+                if (pos >=0){
+                    this.id = url.substring(pos +4);
+                    var resp = await get('/get_student/'+this.id);
+                    this.student = await resp.json();
+                }
+
+
+            },
+            methods  :{
+                async save(){
+                    var formData = new FormData(document.getElementById("fmt"));
+                    if(this.id){
+                        var resp = await put('/update_student/'+this.id,formData);
+
+                    }else{
+                        var resp = await post('/create_student',formData)
+                    }
+                    // var resp = await post('/create_student',formData);
+                    var result = await resp.json();
+                    console.log(result);
+                    if(result.success){
+                        location.href = 'index.html';
+                    }
+                    else{
+                        console.log(result.errors);
+                        alert('Loi say ra khi lu du lieu');
+                    }
+                }
+            }
+        })
+</script>

@@ -1,0 +1,17 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<div id = 'app'>
+	<li v-for = "p in products">{{p.name}}</li
+</div>
+<script>
+new Vue({
+	el:"#app",
+	data:{products:[]},
+	created:async function()
+	{
+	var resp = await fetch("http://localhost:8000/app/get_products");
+	var result = await resp.json();
+	this.products = result.products;
+	console.log(this.products);
+	}
+});
+</script>

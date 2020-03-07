@@ -1,0 +1,34 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<div id = 'app'>
+	<form id ="fmt" v-on:submit.prevent="save()">
+		<p> Ma : <input v-model = "studentNo"></input></p>
+		<p>Ten :<input v-model = "name"></input></p>
+		<button type="submit">submit</button>
+	</form>
+</div>
+<script>
+	new Vue({
+	el:"#app",
+	data:{
+	name :"",studentNo:"",
+	API_URL : "http://localhost:8000/app",
+	},
+	methods:{
+		post:async function(url,data){
+			var headers = {"Content-Type":"application/json"};
+			return fetch(url,{method:"POST","headers":headers,body:JSON.stringify(data)});
+			
+		},
+		save:async function()
+		{
+		var data = {name:this.name,studentNo:this.studentNo};
+			
+		var resp = await this.post(this.API_URL+"/add_student",data);
+		
+		var result = await resp.json();
+		console.log(result)
+		}
+	},
+	
+	})
+</script>

@@ -1,0 +1,54 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<div id = 'app'>
+	<table>
+	<tr>
+		<th>STT</th>
+		<th>Mã SV</th>
+		<th>Tên</th>
+		<th>Thao tác</th>
+	</tr>
+	<tr v-for = "(st,i) in students" :key ="i">
+		<td>{{i+1}}</td>
+		<td>{{st.studentNo}}</td>
+		<td>{{st.name}}</td>
+		<td>
+		<a href ="#" v-on:click="deleteStudent(st.id)">xóa</a>
+		</td>
+		
+	<tr>
+	</table>
+	<a href="student_form.html">Thêm mới</a>
+</div>
+<script>
+new Vue({
+	el:"#app",
+	data:{
+	API_URL : "http://localhost:8000/app",
+	students:[]
+	},
+	methods:{
+		getStudents:async function()
+		{
+			var resp = await fetch(this.API_URL +"/get_all_students");
+			var result = await resp.json();
+			this.students = result.students;	
+		},
+		deleteStudent:async function(id){
+			var resp = await fetch(this.API_URL +"/delete_student/"+id,{method:"DELETE"});
+			var result = await resp.json();
+			if(result.success){
+				await this.getStudents();
+				}
+			else
+			{
+			alert("loi xay ra khi xoa")
+			}
+		}
+	},
+	
+	created : async function(){
+	await this.getStudents()
+	
+	}
+});
+</script>

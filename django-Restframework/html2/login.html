@@ -1,0 +1,25 @@
+<script src="main.js"></script>
+<form>
+    <P>username : <input type="text" id = 'username'></P>
+    <p>password : <input type="password" id= 'password'></p>
+    <button type="button" onclick="login()">Login</button>
+</form>
+<script>
+    async function login(){
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        // alert('username-'+username +'-password-'+password)
+        var formData = new FormData();
+        formData.append("username",username);
+        formData.append("password",password);
+        var resp = await post_url("http://localhost:8000/api/token",formData);
+        var result =await resp.json();
+        // console.log(result)
+        if(result.access){
+            localStorage.setItem("token",result.access);
+            location.href ="index.html"
+        }else{
+            alert("mat khau hoac ten dang nhap khong dung")
+        }
+    }
+</script>

@@ -1,0 +1,51 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="main.js"></script>
+<div id="app">
+    <table border="1">
+        <tr>
+            <th>STT</th>
+            <th>code</th>
+            <th>name</th>
+            <th>option</th>
+        </tr>
+        <tr v-for = "(st,i) in students" :key ="i">
+            <td>{{i+1}}</td>
+            <td>{{st.code}}</td>
+            <td>{{st.name}}</td>
+            <td>
+                <a :href="'student_form.html?id='+st.id">Edit</a>
+                <a href="#" v-on:click ="deleteStudent(st.id)">Del</a>
+            </td>
+        </tr>
+    </table>
+    <a href="student_form.html">Create Student</a>
+</div>
+<script>
+    new Vue({
+        el:'#app',
+        data:{students:[]},
+        created :async function(){
+            var resp = await get('/get_all_students');
+            this.students = await resp.json();
+            console.log(this.students);
+        },
+        methods:{
+            deleteStudent:async function(id){
+                if(confirm('Do you want delete Student '+id+'?'))
+                {
+                    var resp = await delete_('/delete_student/'+id);
+                    var result = await resp.json();
+			        if(result.success){
+			        	location.href = 'index.html';
+			    	}
+                    else
+                    {
+                    alert("loi xay ra khi xoa")
+                    }
+                }
+            }
+        }
+
+    })  
+    
+</script>
